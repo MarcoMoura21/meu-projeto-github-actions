@@ -13,40 +13,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout código
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Garante que o histórico do Git seja totalmente baixado
+      - name: Checkout código
+        uses: actions/checkout@v3
 
-    - name: Verificar diretório
-      run: ls -la  # Lista os arquivos para garantir que tudo foi baixado corretamente
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Configurar Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Instalar dependências
+        run: |
+          npm init -y
+          npm install htmlhint stylelint stylelint-config-standard --save-dev
 
-    - name: Instalar dependências (se necessário)
-      run: |
-        if [ -f package.json ]; then
-          npm install
-        else
-          echo "Nenhum package.json encontrado. Pulando a instalação."
-        fi
+      - name: Criar arquivos de configuração para HTMLHint e Stylelint
+        run: |
+          echo '{ "extends": "htmlhint:recommended" }' > .htmlhintrc
+          echo '{ "extends": "stylelint-config-standard" }' > .stylelintrc.json
 
-    - name: Criar diretório de build (caso não exista)
-      run: |
-        mkdir -p build
-        echo "<h1>Deployed with GitHub Actions</h1>" > build/index.html
+      - name: Verificar HTML com HTMLHint
+        run: npx htmlhint "**/*.html"
 
-    - name: Configurar credenciais do Git
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      - name: Verificar CSS com Stylelint
+        run: npx stylelint "**/*.css"
 
-    - name: Instalar gh-pages e fazer deploy
-      if: github.ref == 'refs/heads/main'
-      run: |
-        npm install -g gh-pages
-        npx gh-pages -d build
+      - name: Criar diretório de build (caso não exista)
+        run: |
+          mkdir -p build
+          echo "<h1>Deployed with GitHub Actions</h1>" > build/index.html
+
+      - name: Configurar credenciais do Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+      - name: Instalar gh-pages e fazer deploy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          npm install -g gh-pages
+          npx gh-pages -d build
