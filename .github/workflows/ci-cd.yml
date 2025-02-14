@@ -21,13 +21,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Instalar dependências (se necessário)
+      - name: Instalar dependências
         run: |
-          if [ -f package.json ]; then
-            npm install
-          else
-            echo "Nenhum package.json encontrado. Pulando a instalação."
-          fi
+          npm init -y
+          npm install htmlhint stylelint stylelint-config-standard --save-dev
 
       - name: Criar arquivos de configuração para HTMLHint e Stylelint
         run: |
