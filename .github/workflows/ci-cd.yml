@@ -22,12 +22,12 @@ jobs:
           node-version: '18'
 
       - name: Instalar dependências (se necessário)
-          run: |
-            if [ -f package.json ]; then
-              npm install
-            else
-              echo "Nenhum package.json encontrado. Pulando a instalação."
-            fi
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          else
+            echo "Nenhum package.json encontrado. Pulando a instalação."
+          fi
 
       - name: Criar arquivos de configuração para HTMLHint e Stylelint
         run: |
