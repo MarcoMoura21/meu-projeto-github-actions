@@ -19,7 +19,7 @@ jobs:
         fetch-depth: 0  # Garante que todos os arquivos sejam baixados corretamente
 
     - name: Verificar diretório
-      run: ls -la  # Lista os arquivos para ver se package.json está presente
+      run: ls -la  # Lista os arquivos para verificar se package.json está presente
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -28,7 +28,6 @@ jobs:
 
     - name: Instalar dependências
       run: npm install
-      working-directory: .  # Certifica-se de rodar no diretório correto
 
     - name: Build project
       run: |
@@ -41,5 +40,6 @@ jobs:
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
         npm install -g gh-pages
         npx gh-pages -d build
