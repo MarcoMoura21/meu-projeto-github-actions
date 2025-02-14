@@ -1,0 +1,52 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Garante que o histórico do Git seja totalmente baixado
+
+    - name: Verificar diretório
+      run: ls -la  # Lista os arquivos para garantir que tudo foi baixado corretamente
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Instalar dependências (se necessário)
+      run: |
+        if [ -f package.json ]; then
+          npm install
+        else
+          echo "Nenhum package.json encontrado. Pulando a instalação."
+        fi
+
+    - name: Criar diretório de build (caso não exista)
+      run: |
+        mkdir -p build
+        echo "<h1>Deployed with GitHub Actions</h1>" > build/index.html
+
+    - name: Configurar credenciais do Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+    - name: Instalar gh-pages e fazer deploy
+      if: github.ref == 'refs/heads/main'
+      run: |
+        npm install -g gh-pages
+        npx gh-pages -d build
