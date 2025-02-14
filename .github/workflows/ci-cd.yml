@@ -14,21 +14,26 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Garante que todos os arquivos sejam baixados corretamente
+
+    - name: Verificar diretório
+      run: ls -la  # Lista os arquivos para ver se package.json está presente
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '18'
 
-    - name: Install dependencies
+    - name: Instalar dependências
       run: npm install
+      working-directory: .  # Certifica-se de rodar no diretório correto
 
     - name: Build project
       run: |
         echo "Building project..."
-        # Substitua pelo comando real de build, se necessário
-        mkdir build
+        mkdir -p build
         echo "<h1>Deployed with GitHub Actions</h1>" > build/index.html
 
     - name: Deploy to GitHub Pages
