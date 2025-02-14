@@ -1,5 +1,5 @@
 {
-    "name": "CI/CD Pipeline",
+    "name": "ci-cd-pipeline",
     "version": "1.0.0",
     "description": "Projeto para estudo de GitHub Actions",
     "main": "index.html",
