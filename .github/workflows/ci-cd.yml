@@ -23,8 +23,8 @@ jobs:
 
       - name: Instalar dependências
         run: |
-          npm init -y
-          npm install htmlhint stylelint stylelint-config-standard --save-dev
+          
+          npm install -g htmlhint stylelint stylelint-config-standard
 
       - name: Criar arquivos de configuração para HTMLHint e Stylelint
         run: |
@@ -35,7 +35,7 @@ jobs:
         run: npx htmlhint --version
 
       - name: Verificar HTML com HTMLHint
-        run: npx htmlhint ./**/*.html
+        run: $(npm root -g)/htmlhint/bin/htmlhint "**/*.html"
 
       - name: Verificar CSS com Stylelint
         run: npx stylelint "**/*.css"
