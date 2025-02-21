@@ -4,9 +4,11 @@
     "description": "Projeto para estudo de GitHub Actions",
     "main": "index.html",
     "scripts": {
-      "start": "echo 'No start script defined'"
+        "start": "echo 'No start script defined'"
     },
     "author": "Seu Nome",
-    "license": "ISC"
-  }
-  
+    "license": "ISC",
+    "devDependencies": {
+        "htmlhint": "^1.1.4"
+    }
+}
